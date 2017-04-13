@@ -71,3 +71,8 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	Route::post(config('laraadmin.adminRoute') . '/create_backup_ajax', 'LA\BackupsController@create_backup_ajax');
 	Route::get(config('laraadmin.adminRoute') . '/downloadBackup/{id}', 'LA\BackupsController@downloadBackup');
 });
+
+Route::group(['', 'middleware' => ['auth', 'permission:ADMIN_PANEL']], function () {
+	Route::resource(config('laraadmin.homeRoute') . '/message', 'Home\MessageController');
+	Route::get(config('laraadmin.homeRoute') . '/getmessage', 'Home\MessageController@getMessage');
+});

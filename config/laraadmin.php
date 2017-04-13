@@ -13,7 +13,8 @@ return [
     */
     
 	'adminRoute' => 'admin',
-    
+    'homeRoute'  => 'home',
+
     /*
     |--------------------------------------------------------------------------
     | Uploads Configuration
