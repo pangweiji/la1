@@ -3,7 +3,6 @@
  * Controller genrated using LaraAdmin
  * Help: http://laraadmin.com
  */
-
 namespace App\Http\Controllers;
 
 use App\Http\Requests;

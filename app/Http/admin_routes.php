@@ -2,7 +2,7 @@
 
 /* ================== Homepage ================== */
 Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'Home\HomeController@index');
 Route::auth();
 
 /* ================== Access Uploaded Files ================== */
@@ -72,7 +72,11 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	Route::get(config('laraadmin.adminRoute') . '/downloadBackup/{id}', 'LA\BackupsController@downloadBackup');
 });
 
-Route::group(['', 'middleware' => ['auth', 'permission:ADMIN_PANEL']], function () {
-	Route::resource(config('laraadmin.homeRoute') . '/message', 'Home\MessageController');
-	Route::get(config('laraadmin.homeRoute') . '/getmessage', 'Home\MessageController@getMessage');
+Route::group(['as' => 'Home', 'middleware' => ['auth', 'permission:ADMIN_PANEL']], function () {
+	//Route::resource(config('laraadmin.homeRoute') . '/message', 'Home\MessageController');
+	//Route::get(config('laraadmin.homeRoute') . '/messaget/getmessage', 'Home\MessageController@getMessage');
+	Route::controller(config('laraadmin.homeRoute') . '/message', 'Home\MessageController');
+
+	Route::resource(config('laraadmin.homeRoute') . '/user', 'Home\UsersController');
+	Route::get(config('laraadmin.homeRoute') . '/userinfo', 'Home\UsersController@getUsers');
 });
