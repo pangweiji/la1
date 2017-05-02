@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Google_Client;
 
 class MessageController extends Controller
 {
@@ -35,8 +36,8 @@ class MessageController extends Controller
     public function getAuth(Request $request)
     {
         $gmail = $request->get('gmail', '');
-        $gmail = '';
         $platform = $request->get('platform', '');
+
         if (!$gmail) {
             echo "<script>";
             echo "setTimeout('window.opener.location.reload()', 2000);";
@@ -46,7 +47,13 @@ class MessageController extends Controller
         }
         
         //通过gmail 获取平台，保证平台一致
-
+        $googleCli = new Google_Client();
+        $googleCli->setAuthConfig('client_secrets.json');
+        $googleCli->setAccessType("offline");        // offline access
+        $googleCli->setIncludeGrantedScopes(true);   // incremental auth
+        $googleCli->addScope(Google_Service_Drive::DRIVE_METADATA_READONLY);
+        $googleCli->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/oauth2callback.php');
+        header('Location:', $googleCli->createAuthUrl());
     }
 
 }
