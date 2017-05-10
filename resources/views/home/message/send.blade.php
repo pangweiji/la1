@@ -4,28 +4,35 @@
 <div class="col-md-12 column">
 	<h3>发送邮件</h3>
 </div>
-<form class="form-horizontal" action="">
+<form class="form-horizontal" method="post" action="">
+	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<div class="form-group">
-		<label for="inputEmail3" class="col-md-2 control-label">Sendid</label>
+		<label for="inputEmail1" class="col-md-2 control-label">发送邮箱</label>
 		<div class="col-md-9">
-			<input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+			<input type="text" name="sendemail" class="form-control" id="inputEmail1" placeholder="Email">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="inputSubject3" class="col-md-2 control-label">Subject</label>
+		<label for="inputEmail3" class="col-md-2 control-label">收件邮箱</label>
 		<div class="col-md-9">
-			<input type="text" class="form-control" id="inputSubject3" placeholder="Subject">
+			<input type="text" name="receiveemail" class="form-control" id="inputEmail3" placeholder="Email">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="inputContent3" class="col-md-2 control-label">Content</label>
+		<label for="inputSubject3" class="col-md-2 control-label">主题</label>
 		<div class="col-md-9">
-			<textarea class="form-control" rows="15"></textarea>
+			<input type="text" name="subject" class="form-control" id="inputSubject3" placeholder="Subject">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="inputContent3" class="col-md-2 control-label">内容</label>
+		<div class="col-md-9">
+			<textarea class="form-control" rows="15" name="content"></textarea>
 		</div>
 	</div>
 	<div class="form-group">
 		<div class="col-md-offset-2 col-md-9">
-			<button type="submit" class="btn btn-default">提交</button>
+			<button type="submit" name="submit" class="btn btn-default">发送</button>
 		</div>
 	</div>
 </form>

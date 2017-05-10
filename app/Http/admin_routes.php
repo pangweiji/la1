@@ -76,6 +76,7 @@ Route::group(['as' => 'Home', 'middleware' => ['auth', 'permission:ADMIN_PANEL']
 	//Route::resource(config('laraadmin.homeRoute') . '/message', 'Home\MessageController');
 	//Route::get(config('laraadmin.homeRoute') . '/messaget/getmessage', 'Home\MessageController@getMessage');
 	Route::controller(config('laraadmin.homeRoute') . '/message', 'Home\MessageController');
+	Route::post(config('laraadmin.homeRoute') . '/messgae/ajax_add_account', 'Home\MessageController@ajaxAddAccount');
 
 	Route::resource(config('laraadmin.homeRoute') . '/user', 'Home\UsersController');
 	Route::get(config('laraadmin.homeRoute') . '/userinfo', 'Home\UsersController@getUsers');
