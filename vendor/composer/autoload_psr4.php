@@ -37,6 +37,7 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'PhpImap\\' => array($vendorDir . '/php-imap/php-imap/src/PhpImap'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'League\\Fractal\\' => array($vendorDir . '/league/fractal/src'),
     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),

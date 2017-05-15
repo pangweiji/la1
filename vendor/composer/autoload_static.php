@@ -12,9 +12,9 @@ class ComposerStaticInit46ccc7bdbb130effcb13e53b7e0810ab
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
-        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
@@ -80,6 +80,7 @@ class ComposerStaticInit46ccc7bdbb130effcb13e53b7e0810ab
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
+            'PhpImap\\' => 8,
         ),
         'M' => 
         array (
@@ -256,6 +257,10 @@ class ComposerStaticInit46ccc7bdbb130effcb13e53b7e0810ab
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
+        'PhpImap\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-imap/php-imap/src/PhpImap',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -413,6 +418,7 @@ class ComposerStaticInit46ccc7bdbb130effcb13e53b7e0810ab
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\FetchEmails' => __DIR__ . '/../..' . '/app/Console/Commands/FetchEmails.php',
         'App\\Console\\Commands\\Inspire' => __DIR__ . '/../..' . '/app/Console/Commands/Inspire.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Events\\Event' => __DIR__ . '/../..' . '/app/Events/Event.php',
@@ -441,10 +447,10 @@ class ComposerStaticInit46ccc7bdbb130effcb13e53b7e0810ab
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Http\\Requests\\Request' => __DIR__ . '/../..' . '/app/Http/Requests/Request.php',
         'App\\Jobs\\Job' => __DIR__ . '/../..' . '/app/Jobs/Job.php',
-        'App\\Models\\AccountMailbox' => __DIR__ . '/../..' . '/app/Models/AccountMailbox.php',
         'App\\Models\\Backup' => __DIR__ . '/../..' . '/app/Models/Backup.php',
         'App\\Models\\Department' => __DIR__ . '/../..' . '/app/Models/Department.php',
         'App\\Models\\Employee' => __DIR__ . '/../..' . '/app/Models/Employee.php',
+        'App\\Models\\Message' => __DIR__ . '/../..' . '/app/Models/Message.php',
         'App\\Models\\Organization' => __DIR__ . '/../..' . '/app/Models/Organization.php',
         'App\\Models\\Upload' => __DIR__ . '/../..' . '/app/Models/Upload.php',
         'App\\Models\\Users' => __DIR__ . '/../..' . '/app/Models/Users.php',
@@ -7978,6 +7984,10 @@ class ComposerStaticInit46ccc7bdbb130effcb13e53b7e0810ab
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'POP3' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.pop3.php',
+        'PhpImap\\Exception' => __DIR__ . '/..' . '/php-imap/php-imap/src/PhpImap/Mailbox.php',
+        'PhpImap\\IncomingMail' => __DIR__ . '/..' . '/php-imap/php-imap/src/PhpImap/IncomingMail.php',
+        'PhpImap\\IncomingMailAttachment' => __DIR__ . '/..' . '/php-imap/php-imap/src/PhpImap/IncomingMail.php',
+        'PhpImap\\Mailbox' => __DIR__ . '/..' . '/php-imap/php-imap/src/PhpImap/Mailbox.php',
         'PhpParser\\Autoloader' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Autoloader.php',
         'PhpParser\\Builder' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Builder.php',
         'PhpParser\\BuilderAbstract' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/BuilderAbstract.php',

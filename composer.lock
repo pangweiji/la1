@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e15389c4dbfc30d4cca38c53774dc9bf",
+    "content-hash": "d0242203746a05287d9d336c98f38460",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1769,16 +1769,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.7",
+            "version": "v5.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4"
+                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
-                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/9a06dc570a0367850280eefd3f1dc2da45aef517",
+                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517",
                 "shasum": ""
             },
             "require": {
@@ -1819,7 +1819,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-04-20T17:32:18+00:00"
+            "time": "2017-05-01T15:54:03+00:00"
         },
         {
             "name": "symfony/console",
@@ -3460,6 +3460,50 @@
                 "testing"
             ],
             "time": "2017-02-28T12:52:32+00:00"
+        },
+        {
+            "name": "php-imap/php-imap",
+            "version": "2.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barbushin/php-imap.git",
+                "reference": "949826c9b109113ec93a5214e85afce31cba000c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barbushin/php-imap/zipball/949826c9b109113ec93a5214e85afce31cba000c",
+                "reference": "949826c9b109113ec93a5214e85afce31cba000c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-imap": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpImap\\": "src/PhpImap/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Barbushin",
+                    "email": "barbushin@gmail.com",
+                    "homepage": "http://linkedin.com/in/barbushin"
+                }
+            ],
+            "description": "PHP class to access mailbox by POP3/IMAP/NNTP using IMAP extension",
+            "homepage": "https://github.com/barbushin/php-imap",
+            "keywords": [
+                "imap",
+                "mail",
+                "php"
+            ],
+            "time": "2016-08-13T15:39:00+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",

@@ -2,8 +2,7 @@
 
 @section('content')
 <div class="col-md-12 column">
-	<h3>帐号列表</h3>
-
+	<h3>邮箱帐号列表</h3>
 	<!-- 添加帐号 start -->
 	<div id="addAccount" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -15,22 +14,12 @@
 
 				<div class="modal-body">
 					<form id="addAccountForm" method="post" action="">
-						
-						<div class="form-group">
-							<label>平台</label>
-							<select class="form-control input-sm" id="InputPlatform1">
-								<option value="-1">请选择</option>
-								<option value="amazon">amazon</option>
-								<option value="walmart">walmart</option>
-							</select>
-						</div>
-
 						<div class="form-group">
 							<label for="InputAccount1">帐号</label>
 							<input type="text" class="form-control" id="InputAccount1" placeholder="Enter account" required>
 						</div>
 						<div class="form-group">
-							<label for="InputEmail1">Gmail邮箱</label>
+							<label for="InputEmail1">邮箱</label>
 							<input type="email" class="form-control" id="InputEmail1" placeholder="Enter email"  required >
 						</div>
 						<div class="form-group">
@@ -54,46 +43,37 @@
 		</button>
 	</div>
 	<!-- 添加帐号 end -->
-
 </div>
 <table class="table table-hover">
 	<thead>
 		<tr>
 			<th>ID</th>
-			<th>Gamil邮箱</th>
-			<th>状态</th>
+			<th>帐号</th>
+			<th>Email</th>
 			<th>操作</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td>1</td>
-			<td>pang@gmail.com</td>
-			<td>未授权</td>
-			<td>
-				<button gmail="pang@gmail.com" platform="amazon" id="auth" class="btn btn-primary">Gmail授权</button>
-			</td>
-		</tr>
+		@foreach($list as $v)
+			<tr>
+				<td>{{ $v->id }}</td>
+				<td>{{ $v->account }}</td>
+				<td>{{ $v->email }}</td>
+				<td>
+					<button type="button" class="btn btn-primary">修改</button>
+					<button type="button" onclick="deleteAccount({{ $v->id }})" class="btn btn-danger">删除</button>
+				</td>
+			</tr>
+		@endforeach
 	</tbody>
 </table>
+{{ $list->links() }}
 
 @endsection('content')
 
 @section('scripts')
 <script type="text/javascript">
-	var subWindow;
-	$('#auth').click(function () {
-		if (subWindow == null || subWindow.closed) {
-			var gmail = $(this).attr('gmail');
-			var platform = $(this).attr('platform');
-			subWindow = window.open("{{ url('home/message/auth') }}?gmail="+gmail+"&platform="+platform, "", "top=150px,left=350px,width=600px,height=450px,location=yes,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,z-look=yes")
-		} else {
-			toastr.warning('同时智能打开一个授权窗口！');
-		}
-	});
-
 	$('#btnSubmit').click(function() {
-		var platform = $('#InputPlatform1').val();
 		var account = $('#InputAccount1').val();
 		var email = $('#InputEmail1').val();
 		var password = $('#InputPassword1').val();
@@ -111,30 +91,35 @@
 			toastr.warning('密码不能为空！');
 			return false;
 		}
-		if (platform == -1) {
-			toastr.warning('请选择平台！');
-			return false;
-		}
 
 		//ajax提交
 		$.ajax({
-			url: '{{ url(config("laraadmin.homeRoute")."/messgae/ajax_add_account") }}',
+			url: '{{ url(config("laraadmin.homeRoute")."/message_addAccount_ajax") }}',
 			type: 'POST',
 			dataType: 'json',
-			data: {platform: platform, account: account, email: email, password: password},
+			data: {account: account, email: email, password: password},
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		})
 		.success(function (data) {
-			console.log(data);
-		})
-		.done(function() {
-			console.log("success");
-		})
-		.fail(function() {
-			console.log("error");
+			if (data.code != 1001) {
+				toastr.warning(data.msg);
+			} else {
+				toastr.success('操作成功！');
+			}
 		})
 	});
+
+	function deleteAccount(id) {
+		$.getJSON('{{ url(config("laraadmin.homeRoute")."/message_deleteAccount_ajax") }}/'+id, function(data) {
+			/*optional stuff to do after success */
+			if (data.code != 2001) {
+				toastr.warning(data.msg);
+			} else {
+				toastr.success('操作成功！');
+			}
+		});
+	}
 </script>
 @endsection

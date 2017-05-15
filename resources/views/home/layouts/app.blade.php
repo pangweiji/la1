@@ -32,7 +32,7 @@
 	<div class="container">
 		<div class="row clearfix">
 			<!-- 导航 start -->
-			<div class="col-md-12 column">
+			<div class="col-md-14 column">
 				<nav class="navbar navbar-default" role="navigation">
 					<div class="container-fluid">
 						<div class="navbar-header">
@@ -46,9 +46,9 @@
 										邮件管理 <b class="caret"></b>
 									</a>
 									<ul class="dropdown-menu">
-										<li><a href="{{ url('home/message/messagelist') }}">收件箱</a></li>
+										<li><a href="{{ url('home/message_list') }}">收件箱</a></li>
 										<li><a href="{{ url('home/message/sendmessage') }}">发送邮件</a></li>
-										<li><a href="{{ url('home/message/accountmanagment') }}">帐户管理</a></li>
+										<li><a href="{{ url('home/message/message_accountList') }}">帐户管理</a></li>
 										<li class="divider"></li>
 										<li><a href="#">分离的链接</a></li>
 										<li class="divider"></li>	

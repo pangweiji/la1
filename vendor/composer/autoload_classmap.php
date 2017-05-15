@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\FetchEmails' => $baseDir . '/app/Console/Commands/FetchEmails.php',
     'App\\Console\\Commands\\Inspire' => $baseDir . '/app/Console/Commands/Inspire.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Events\\Event' => $baseDir . '/app/Events/Event.php',
@@ -34,10 +35,10 @@ return array(
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Http\\Requests\\Request' => $baseDir . '/app/Http/Requests/Request.php',
     'App\\Jobs\\Job' => $baseDir . '/app/Jobs/Job.php',
-    'App\\Models\\AccountMailbox' => $baseDir . '/app/Models/AccountMailbox.php',
     'App\\Models\\Backup' => $baseDir . '/app/Models/Backup.php',
     'App\\Models\\Department' => $baseDir . '/app/Models/Department.php',
     'App\\Models\\Employee' => $baseDir . '/app/Models/Employee.php',
+    'App\\Models\\Message' => $baseDir . '/app/Models/Message.php',
     'App\\Models\\Organization' => $baseDir . '/app/Models/Organization.php',
     'App\\Models\\Upload' => $baseDir . '/app/Models/Upload.php',
     'App\\Models\\Users' => $baseDir . '/app/Models/Users.php',
@@ -7571,6 +7572,10 @@ return array(
     'PHP_Token_YIELD' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_YIELD_FROM' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'POP3' => $vendorDir . '/phpmailer/phpmailer/class.pop3.php',
+    'PhpImap\\Exception' => $vendorDir . '/php-imap/php-imap/src/PhpImap/Mailbox.php',
+    'PhpImap\\IncomingMail' => $vendorDir . '/php-imap/php-imap/src/PhpImap/IncomingMail.php',
+    'PhpImap\\IncomingMailAttachment' => $vendorDir . '/php-imap/php-imap/src/PhpImap/IncomingMail.php',
+    'PhpImap\\Mailbox' => $vendorDir . '/php-imap/php-imap/src/PhpImap/Mailbox.php',
     'PhpParser\\Autoloader' => $vendorDir . '/nikic/php-parser/lib/PhpParser/Autoloader.php',
     'PhpParser\\Builder' => $vendorDir . '/nikic/php-parser/lib/PhpParser/Builder.php',
     'PhpParser\\BuilderAbstract' => $vendorDir . '/nikic/php-parser/lib/PhpParser/BuilderAbstract.php',
