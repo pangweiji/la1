@@ -41,11 +41,12 @@ class FetchEmails extends Command
      */
     public function handle()
     {
+        ini_set('max_execution_time', '0');
         //获取参数
         $account = $this->argument('account');
         //$email = $this->argument('email');
         $day = $this->argument('day');  //天
-        $date = date('Y-m-d', time() - 86400);
+        $date = date('d M Y', time() - 86400 * $day);
 
         //根据帐号和email获取信息
         $emailInfo = DB::table('email_info')
@@ -57,16 +58,25 @@ class FetchEmails extends Command
             $this->error('EmailInfo is empty');
         }
 
+        $platform = $emailInfo->platform;
         $email = $emailInfo->email;
         $password = $emailInfo->password;
+        $uploadPath = '/uploads/email_attachment/' . $account . '/' . date('Y-m-d') . '/';
+        $attachmentPath = storage_path(). $uploadPath;
+        
+        if (!file_exists($attachmentPath)) {
+            mkdir($attachmentPath, 0777, true);
+        }
 
         $this->info('fetch email ....');
-        $this->line("email:{$email}  after:{$date}");
+        $this->line("email:{$email}  after:".date('Y-m-d', time() - 86400 * $day));
 
+        $serverEncoding = 'UTF-8';
         switch (explode('@', $email)[1]) {
             case 'hotmail.com':
             case 'outlook.com':
                 $addr = 'imap-mail.outlook.com:993/imap/ssl/novalidate-cert';
+                $serverEncoding = 'US-ASCII';
                 break;
             default:
                 $this->error('email error!');
@@ -74,46 +84,83 @@ class FetchEmails extends Command
                 break;
         }
 
-        $mailbox = new ImapMailbox('{'.$addr.'}INBOX', $email, $password);
+        $mailbox = new ImapMailbox('{'.$addr.'}INBOX', $email, $password, $attachmentPath, $serverEncoding);
 
-        //$mailsIds = $mailbox->searchMailbox('SINCE "'. $date .'"');
-        $mailsIds = $mailbox->searchMailbox('ALL');
+        $mailsIds = $mailbox->searchMailbox('SINCE "'. $date .'"');
+        //$mailsIds = $mailbox->searchMailbox('ALL');
+        //$mailsIds = $mailbox->searchMailbox('ALL');
 
         if(!$mailsIds) {
             $this->error('Mailbox is empty');
+            exit();
         }
+
         $allEmail = count($mailsIds);
         $this->info('Has '.$allEmail.' email.');
 
         $mailInfo = array();
         $i = 1;
+        $insertData = array();
         foreach ($mailsIds as $mailsId) {
             $mailObj = $mailbox->getMail($mailsId);
-            $mailInfo[$mailsId]['subject']      = $mailObj->subject;
-            $mailInfo[$mailsId]['fromName']     = $mailObj->fromName;
-            $mailInfo[$mailsId]['fromAddress']  = $mailObj->fromAddress;
-            $mailInfo[$mailsId]['to']           = $mailObj->to;
-            $mailInfo[$mailsId]['toString']     = $mailObj->toString;
-            $mailInfo[$mailsId]['cc']           = $mailObj->cc;
-            $mailInfo[$mailsId]['bcc']          = $mailObj->bcc;
-            $mailInfo[$mailsId]['replyTo']      = $mailObj->replyTo;
-            $mailInfo[$mailsId]['content']      = $mailObj->textPlain;
+            $insertData[$mailsId] = [
+                'message_id' => $mailsId, 
+                'receiveid' => $mailObj->fromAddress, 
+                'receivename' => $mailObj->fromName, 
+                'sendid' => $mailObj->to, 
+                'sendname' => $mailObj->toString, 
+                'subject' => $mailObj->subject, 
+                'status' => 0,
+                'sendtime' => strtotime($mailObj->date) + 8*3600*24,
+                'account' => $account, 
+                'receivetimestamp' => time(), 
+                'plaincontent' => $mailObj->textPlain
+            ];
 
             $this->line('fetch '.$i.'/'.$allEmail.' '.$mailObj->fromAddress);
             $i++;
-        }
-        dd($mailInfo);
-        $error = imap_last_error();
-        if ($error) {
-            $this->error('error!');
-            $this->error(imap_last_error());
-            exit;
+
+            $hasAttachment = $mailObj->getAttachments();
+            if (!empty($hasAttachment)) {
+                $insertData[$mailsId]['hasAttachment'] = 1;
+                $this->line('保存附件中...');
+
+                //保存附件信息
+                $atArr = array();
+                foreach ($hasAttachment as $ha) {
+                    $atArr[] = [
+                        'platform' => $platform,
+                        'mailbox'  => $email,
+                        'messageid'=> $mailsId,
+                        'attachmentName' => $ha->name,
+                        'attachmentPath' => $uploadPath . basename($ha->filePath)
+                    ];
+
+                    //插入
+                    $result1 = DB::table('msg_fetchattachment')
+                        ->insert($atArr);
+                    if (!$result1) {
+                        $this->error('save attachment fail!');
+                    } else {
+                        $this->info('save attachment success!');
+                    }
+                }
+            }
         }
 
+        if ($error = imap_last_error()) {
+            $this->error('error!');
+            $this->error($error);
+            exit;
+        }
+        dd($insertData);
         //入库
-        $result = DB::table('email_info')
-            ->insert(
-                []
-            );
+        $result2 = DB::table('message')
+            ->insert($insertData);
+        if ($result2) {
+            $this->info('save email success!');
+        } else {
+            $this->error('save email fail!');
+        }
     }
 }

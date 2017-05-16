@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-04-11 17:27:09
+Date: 2017-05-15 18:02:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,10 +33,6 @@ CREATE TABLE `backups` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of backups
--- ----------------------------
-
--- ----------------------------
 -- Table structure for departments
 -- ----------------------------
 DROP TABLE IF EXISTS `departments`;
@@ -53,9 +49,17 @@ CREATE TABLE `departments` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of departments
+-- Table structure for email_info
 -- ----------------------------
-INSERT INTO `departments` VALUES ('1', 'Administration', '[]', '#000', null, '2017-04-11 06:18:40', '2017-04-11 06:18:40');
+DROP TABLE IF EXISTS `email_info`;
+CREATE TABLE `email_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account` varchar(30) NOT NULL,
+  `email` varchar(60) NOT NULL,
+  `password` varchar(30) NOT NULL,
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for employees
@@ -87,11 +91,6 @@ CREATE TABLE `employees` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of employees
--- ----------------------------
-INSERT INTO `employees` VALUES ('1', 'root', 'Super Admin', 'Male', '8888888888', '', 'pang379415825@163.com', '1', 'Pune', 'Karve nagar, Pune 411030', 'About user / biography', '2017-04-11', '2017-04-11', '2017-04-11', '0.000', null, '2017-04-11 06:19:24', '2017-04-11 06:19:24');
-
--- ----------------------------
 -- Table structure for la_configs
 -- ----------------------------
 DROP TABLE IF EXISTS `la_configs`;
@@ -104,23 +103,6 @@ CREATE TABLE `la_configs` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of la_configs
--- ----------------------------
-INSERT INTO `la_configs` VALUES ('1', 'sitename', '', 'LaraAdmin 1.0', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('2', 'sitename_part1', '', 'Lara', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('3', 'sitename_part2', '', 'Admin 1.0', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('4', 'sitename_short', '', 'LA', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('5', 'site_description', '', 'LaraAdmin is a open-source Laravel Admin Panel for quick-start Admin based applications and boilerplate for CRM or CMS systems.', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('6', 'sidebar_search', '', '1', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('7', 'show_messages', '', '1', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('8', 'show_notifications', '', '1', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('9', 'show_tasks', '', '1', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('10', 'show_rightsidebar', '', '1', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('11', 'skin', '', 'skin-white', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('12', 'layout', '', 'fixed', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `la_configs` VALUES ('13', 'default_email', '', 'test@example.com', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
 
 -- ----------------------------
 -- Table structure for la_menus
@@ -140,16 +122,36 @@ CREATE TABLE `la_menus` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of la_menus
+-- Table structure for message
 -- ----------------------------
-INSERT INTO `la_menus` VALUES ('1', 'Team', '#', 'fa-group', 'custom', '0', '1', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `la_menus` VALUES ('2', 'Users', 'users', 'fa-group', 'module', '1', '0', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `la_menus` VALUES ('3', 'Uploads', 'uploads', 'fa-files-o', 'module', '0', '0', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `la_menus` VALUES ('4', 'Departments', 'departments', 'fa-tags', 'module', '1', '0', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `la_menus` VALUES ('5', 'Employees', 'employees', 'fa-group', 'module', '1', '0', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `la_menus` VALUES ('6', 'Roles', 'roles', 'fa-user-plus', 'module', '1', '0', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `la_menus` VALUES ('7', 'Organizations', 'organizations', 'fa-university', 'module', '0', '0', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `la_menus` VALUES ('8', 'Permissions', 'permissions', 'fa-magic', 'module', '1', '0', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_id` varchar(50) NOT NULL,
+  `receiveid` varchar(60) NOT NULL,
+  `receivename` varchar(100) DEFAULT NULL,
+  `sendid` varchar(100) NOT NULL,
+  `sendname` varchar(100) DEFAULT NULL,
+  `subject` varchar(255) NOT NULL COMMENT '主题',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '邮件状态：0表示未回复，1表示正在回复，2表示已经回复，3表示是通过人为加标记来表示已回复，4表示回复失败。',
+  `sendtime` varchar(40) NOT NULL COMMENT '邮件发送时间',
+  `classid` int(10) DEFAULT NULL COMMENT '分类id',
+  `account` varchar(30) NOT NULL COMMENT '帐号',
+  `receivetimestamp` varchar(50) NOT NULL COMMENT '进入系统时间',
+  `replycontent` text COMMENT '回复内容',
+  `replyuser_id` int(5) DEFAULT NULL COMMENT '回复人id',
+  `replytime` varchar(30) DEFAULT NULL COMMENT '回复时间',
+  `read` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0未回复，1内容回复，2标记回复',
+  `messagepath` varchar(255) NOT NULL,
+  `attachpath` varchar(255) DEFAULT NULL COMMENT '附件路径',
+  `attachname` varchar(255) DEFAULT NULL COMMENT '附件名称',
+  `send_attachpath` varchar(255) NOT NULL COMMENT '对应此邮件回复时，添加的附件的地址。',
+  `plaincontent` longtext NOT NULL COMMENT '无格式内容',
+  `hasAttachment` tinyint(1) NOT NULL COMMENT '0:无 1:有',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0',
+  `isRemove` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:未移除 1:手动移除 2:自动移除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for migrations
@@ -159,28 +161,6 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of migrations
--- ----------------------------
-INSERT INTO `migrations` VALUES ('2014_05_26_050000_create_modules_table', '1');
-INSERT INTO `migrations` VALUES ('2014_05_26_055000_create_module_field_types_table', '1');
-INSERT INTO `migrations` VALUES ('2014_05_26_060000_create_module_fields_table', '1');
-INSERT INTO `migrations` VALUES ('2014_10_12_000000_create_users_table', '1');
-INSERT INTO `migrations` VALUES ('2014_10_12_100000_create_password_resets_table', '1');
-INSERT INTO `migrations` VALUES ('2014_12_01_000000_create_uploads_table', '1');
-INSERT INTO `migrations` VALUES ('2016_05_26_064006_create_departments_table', '1');
-INSERT INTO `migrations` VALUES ('2016_05_26_064007_create_employees_table', '1');
-INSERT INTO `migrations` VALUES ('2016_05_26_064446_create_roles_table', '1');
-INSERT INTO `migrations` VALUES ('2016_07_05_115343_create_role_user_table', '1');
-INSERT INTO `migrations` VALUES ('2016_07_06_140637_create_organizations_table', '1');
-INSERT INTO `migrations` VALUES ('2016_07_07_134058_create_backups_table', '1');
-INSERT INTO `migrations` VALUES ('2016_07_07_134058_create_menus_table', '1');
-INSERT INTO `migrations` VALUES ('2016_09_10_163337_create_permissions_table', '1');
-INSERT INTO `migrations` VALUES ('2016_09_10_163520_create_permission_role_table', '1');
-INSERT INTO `migrations` VALUES ('2016_09_22_105958_role_module_fields_table', '1');
-INSERT INTO `migrations` VALUES ('2016_09_22_110008_role_module_table', '1');
-INSERT INTO `migrations` VALUES ('2016_10_06_115413_create_la_configs_table', '1');
 
 -- ----------------------------
 -- Table structure for modules
@@ -200,18 +180,6 @@ CREATE TABLE `modules` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of modules
--- ----------------------------
-INSERT INTO `modules` VALUES ('1', 'Users', 'Users', 'users', 'name', 'User', 'UsersController', 'fa-group', '1', '2017-04-11 06:18:34', '2017-04-11 06:18:42');
-INSERT INTO `modules` VALUES ('2', 'Uploads', 'Uploads', 'uploads', 'name', 'Upload', 'UploadsController', 'fa-files-o', '1', '2017-04-11 06:18:35', '2017-04-11 06:18:42');
-INSERT INTO `modules` VALUES ('3', 'Departments', 'Departments', 'departments', 'name', 'Department', 'DepartmentsController', 'fa-tags', '1', '2017-04-11 06:18:35', '2017-04-11 06:18:42');
-INSERT INTO `modules` VALUES ('4', 'Employees', 'Employees', 'employees', 'name', 'Employee', 'EmployeesController', 'fa-group', '1', '2017-04-11 06:18:36', '2017-04-11 06:18:42');
-INSERT INTO `modules` VALUES ('5', 'Roles', 'Roles', 'roles', 'name', 'Role', 'RolesController', 'fa-user-plus', '1', '2017-04-11 06:18:36', '2017-04-11 06:18:42');
-INSERT INTO `modules` VALUES ('6', 'Organizations', 'Organizations', 'organizations', 'name', 'Organization', 'OrganizationsController', 'fa-university', '1', '2017-04-11 06:18:37', '2017-04-11 06:18:42');
-INSERT INTO `modules` VALUES ('7', 'Backups', 'Backups', 'backups', 'name', 'Backup', 'BackupsController', 'fa-hdd-o', '1', '2017-04-11 06:18:37', '2017-04-11 06:18:42');
-INSERT INTO `modules` VALUES ('8', 'Permissions', 'Permissions', 'permissions', 'name', 'Permission', 'PermissionsController', 'fa-magic', '1', '2017-04-11 06:18:37', '2017-04-11 06:18:42');
 
 -- ----------------------------
 -- Table structure for module_fields
@@ -240,61 +208,6 @@ CREATE TABLE `module_fields` (
 ) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of module_fields
--- ----------------------------
-INSERT INTO `module_fields` VALUES ('1', 'name', 'Name', '1', '16', '0', '', '5', '250', '1', '', '0', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_fields` VALUES ('2', 'context_id', 'Context', '1', '13', '0', '0', '0', '0', '0', '', '0', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_fields` VALUES ('3', 'email', 'Email', '1', '8', '1', '', '0', '250', '0', '', '0', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_fields` VALUES ('4', 'password', 'Password', '1', '17', '0', '', '6', '250', '1', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('5', 'type', 'User Type', '1', '7', '0', 'Employee', '0', '0', '0', '[\"Employee\",\"Client\"]', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('6', 'name', 'Name', '2', '16', '0', '', '5', '250', '1', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('7', 'path', 'Path', '2', '19', '0', '', '0', '250', '0', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('8', 'extension', 'Extension', '2', '19', '0', '', '0', '20', '0', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('9', 'caption', 'Caption', '2', '19', '0', '', '0', '250', '0', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('10', 'user_id', 'Owner', '2', '7', '0', '1', '0', '0', '0', '@users', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('11', 'hash', 'Hash', '2', '19', '0', '', '0', '250', '0', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('12', 'public', 'Is Public', '2', '2', '0', '0', '0', '0', '0', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('13', 'name', 'Name', '3', '16', '1', '', '1', '250', '1', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('14', 'tags', 'Tags', '3', '20', '0', '[]', '0', '0', '0', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('15', 'color', 'Color', '3', '19', '0', '', '0', '50', '1', '', '0', '2017-04-11 06:18:35', '2017-04-11 06:18:35');
-INSERT INTO `module_fields` VALUES ('16', 'name', 'Name', '4', '16', '0', '', '5', '250', '1', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('17', 'designation', 'Designation', '4', '19', '0', '', '0', '50', '1', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('18', 'gender', 'Gender', '4', '18', '0', 'Male', '0', '0', '1', '[\"Male\",\"Female\"]', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('19', 'mobile', 'Mobile', '4', '14', '0', '', '10', '20', '1', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('20', 'mobile2', 'Alternative Mobile', '4', '14', '0', '', '10', '20', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('21', 'email', 'Email', '4', '8', '1', '', '5', '250', '1', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('22', 'dept', 'Department', '4', '7', '0', '0', '0', '0', '1', '@departments', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('23', 'city', 'City', '4', '19', '0', '', '0', '50', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('24', 'address', 'Address', '4', '1', '0', '', '0', '1000', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('25', 'about', 'About', '4', '19', '0', '', '0', '0', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('26', 'date_birth', 'Date of Birth', '4', '4', '0', '1990-01-01', '0', '0', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('27', 'date_hire', 'Hiring Date', '4', '4', '0', 'date(\'Y-m-d\')', '0', '0', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('28', 'date_left', 'Resignation Date', '4', '4', '0', '1990-01-01', '0', '0', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('29', 'salary_cur', 'Current Salary', '4', '6', '0', '0.0', '0', '2', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('30', 'name', 'Name', '5', '16', '1', '', '1', '250', '1', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('31', 'display_name', 'Display Name', '5', '19', '0', '', '0', '250', '1', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('32', 'description', 'Description', '5', '21', '0', '', '0', '1000', '0', '', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('33', 'parent', 'Parent Role', '5', '7', '0', '1', '0', '0', '0', '@roles', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('34', 'dept', 'Department', '5', '7', '0', '1', '0', '0', '0', '@departments', '0', '2017-04-11 06:18:36', '2017-04-11 06:18:36');
-INSERT INTO `module_fields` VALUES ('35', 'name', 'Name', '6', '16', '1', '', '5', '250', '1', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('36', 'email', 'Email', '6', '8', '1', '', '0', '250', '0', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('37', 'phone', 'Phone', '6', '14', '0', '', '0', '20', '0', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('38', 'website', 'Website', '6', '23', '0', 'http://', '0', '250', '0', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('39', 'assigned_to', 'Assigned to', '6', '7', '0', '0', '0', '0', '0', '@employees', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('40', 'connect_since', 'Connected Since', '6', '4', '0', 'date(\'Y-m-d\')', '0', '0', '0', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('41', 'address', 'Address', '6', '1', '0', '', '0', '1000', '1', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('42', 'city', 'City', '6', '19', '0', '', '0', '250', '1', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('43', 'description', 'Description', '6', '21', '0', '', '0', '1000', '0', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('44', 'profile_image', 'Profile Image', '6', '12', '0', '', '0', '250', '0', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('45', 'profile', 'Company Profile', '6', '9', '0', '', '0', '250', '0', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('46', 'name', 'Name', '7', '16', '1', '', '0', '250', '1', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('47', 'file_name', 'File Name', '7', '19', '1', '', '0', '250', '1', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('48', 'backup_size', 'File Size', '7', '19', '0', '0', '0', '10', '1', '', '0', '2017-04-11 06:18:37', '2017-04-11 06:18:37');
-INSERT INTO `module_fields` VALUES ('49', 'name', 'Name', '8', '16', '1', '', '1', '250', '1', '', '0', '2017-04-11 06:18:38', '2017-04-11 06:18:38');
-INSERT INTO `module_fields` VALUES ('50', 'display_name', 'Display Name', '8', '19', '0', '', '0', '250', '1', '', '0', '2017-04-11 06:18:38', '2017-04-11 06:18:38');
-INSERT INTO `module_fields` VALUES ('51', 'description', 'Description', '8', '21', '0', '', '0', '1000', '0', '', '0', '2017-04-11 06:18:38', '2017-04-11 06:18:38');
-
--- ----------------------------
 -- Table structure for module_field_types
 -- ----------------------------
 DROP TABLE IF EXISTS `module_field_types`;
@@ -307,32 +220,19 @@ CREATE TABLE `module_field_types` (
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of module_field_types
+-- Table structure for msg_account_mailbox
 -- ----------------------------
-INSERT INTO `module_field_types` VALUES ('1', 'Address', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('2', 'Checkbox', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('3', 'Currency', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('4', 'Date', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('5', 'Datetime', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('6', 'Decimal', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('7', 'Dropdown', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('8', 'Email', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('9', 'File', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('10', 'Float', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('11', 'HTML', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('12', 'Image', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('13', 'Integer', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('14', 'Mobile', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('15', 'Multiselect', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('16', 'Name', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('17', 'Password', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('18', 'Radio', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('19', 'String', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('20', 'Taginput', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('21', 'Textarea', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('22', 'TextField', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('23', 'URL', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
-INSERT INTO `module_field_types` VALUES ('24', 'Files', '2017-04-11 06:18:34', '2017-04-11 06:18:34');
+DROP TABLE IF EXISTS `msg_account_mailbox`;
+CREATE TABLE `msg_account_mailbox` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `platform` varchar(20) NOT NULL,
+  `account` varchar(50) NOT NULL,
+  `mailbox` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_delete` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for organizations
@@ -362,10 +262,6 @@ CREATE TABLE `organizations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of organizations
--- ----------------------------
-
--- ----------------------------
 -- Table structure for password_resets
 -- ----------------------------
 DROP TABLE IF EXISTS `password_resets`;
@@ -376,10 +272,6 @@ CREATE TABLE `password_resets` (
   KEY `password_resets_email_index` (`email`),
   KEY `password_resets_token_index` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of password_resets
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for permissions
@@ -398,11 +290,6 @@ CREATE TABLE `permissions` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of permissions
--- ----------------------------
-INSERT INTO `permissions` VALUES ('1', 'ADMIN_PANEL', 'Admin Panel', 'Admin Panel Permission', null, '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-
--- ----------------------------
 -- Table structure for permission_role
 -- ----------------------------
 DROP TABLE IF EXISTS `permission_role`;
@@ -414,11 +301,6 @@ CREATE TABLE `permission_role` (
   CONSTRAINT `permission_role_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `permission_role_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of permission_role
--- ----------------------------
-INSERT INTO `permission_role` VALUES ('1', '1');
 
 -- ----------------------------
 -- Table structure for roles
@@ -443,11 +325,6 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of roles
--- ----------------------------
-INSERT INTO `roles` VALUES ('1', 'SUPER_ADMIN', 'Super Admin', 'Full Access Role', '1', '1', null, '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-
--- ----------------------------
 -- Table structure for role_module
 -- ----------------------------
 DROP TABLE IF EXISTS `role_module`;
@@ -469,18 +346,6 @@ CREATE TABLE `role_module` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of role_module
--- ----------------------------
-INSERT INTO `role_module` VALUES ('1', '1', '1', '1', '1', '1', '1', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module` VALUES ('2', '1', '2', '1', '1', '1', '1', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module` VALUES ('3', '1', '3', '1', '1', '1', '1', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module` VALUES ('4', '1', '4', '1', '1', '1', '1', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module` VALUES ('5', '1', '5', '1', '1', '1', '1', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module` VALUES ('6', '1', '6', '1', '1', '1', '1', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module` VALUES ('7', '1', '7', '1', '1', '1', '1', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `role_module` VALUES ('8', '1', '8', '1', '1', '1', '1', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-
--- ----------------------------
 -- Table structure for role_module_fields
 -- ----------------------------
 DROP TABLE IF EXISTS `role_module_fields`;
@@ -499,61 +364,6 @@ CREATE TABLE `role_module_fields` (
 ) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of role_module_fields
--- ----------------------------
-INSERT INTO `role_module_fields` VALUES ('1', '1', '1', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('2', '1', '2', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('3', '1', '3', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('4', '1', '4', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('5', '1', '5', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('6', '1', '6', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('7', '1', '7', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('8', '1', '8', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('9', '1', '9', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('10', '1', '10', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('11', '1', '11', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('12', '1', '12', 'write', '2017-04-11 06:18:40', '2017-04-11 06:18:40');
-INSERT INTO `role_module_fields` VALUES ('13', '1', '13', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('14', '1', '14', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('15', '1', '15', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('16', '1', '16', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('17', '1', '17', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('18', '1', '18', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('19', '1', '19', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('20', '1', '20', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('21', '1', '21', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('22', '1', '22', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('23', '1', '23', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('24', '1', '24', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('25', '1', '25', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('26', '1', '26', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('27', '1', '27', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('28', '1', '28', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('29', '1', '29', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('30', '1', '30', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('31', '1', '31', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('32', '1', '32', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('33', '1', '33', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('34', '1', '34', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('35', '1', '35', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('36', '1', '36', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('37', '1', '37', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('38', '1', '38', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('39', '1', '39', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('40', '1', '40', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('41', '1', '41', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('42', '1', '42', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('43', '1', '43', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('44', '1', '44', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('45', '1', '45', 'write', '2017-04-11 06:18:41', '2017-04-11 06:18:41');
-INSERT INTO `role_module_fields` VALUES ('46', '1', '46', 'write', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `role_module_fields` VALUES ('47', '1', '47', 'write', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `role_module_fields` VALUES ('48', '1', '48', 'write', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `role_module_fields` VALUES ('49', '1', '49', 'write', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `role_module_fields` VALUES ('50', '1', '50', 'write', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-INSERT INTO `role_module_fields` VALUES ('51', '1', '51', 'write', '2017-04-11 06:18:42', '2017-04-11 06:18:42');
-
--- ----------------------------
 -- Table structure for role_user
 -- ----------------------------
 DROP TABLE IF EXISTS `role_user`;
@@ -569,11 +379,6 @@ CREATE TABLE `role_user` (
   CONSTRAINT `role_user_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `role_user_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of role_user
--- ----------------------------
-INSERT INTO `role_user` VALUES ('1', '1', '1', null, null);
 
 -- ----------------------------
 -- Table structure for uploads
@@ -597,10 +402,6 @@ CREATE TABLE `uploads` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
--- Records of uploads
--- ----------------------------
-
--- ----------------------------
 -- Table structure for users
 -- ----------------------------
 DROP TABLE IF EXISTS `users`;
@@ -618,8 +419,3 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of users
--- ----------------------------
-INSERT INTO `users` VALUES ('1', 'root', '1', 'pang379415825@163.com', '$2y$10$rQFNRrkj1GTpHHaOmRQ3ze6DZKSp2C9Gne4N0ec8GaNblz1pcOeGm', 'Employee', 'WxiBSYipZdWSaAFif51Z0SOjUUfCgVByThDAqZIQfEJ9EoiUAueJz8Ho9akv', null, '2017-04-11 06:19:24', '2017-04-11 09:05:04');

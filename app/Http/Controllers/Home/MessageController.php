@@ -104,7 +104,7 @@ class MessageController extends Controller
             ->where('is_delete',0)
             ->get();
 
-        return view('home.message.detail');
+        return view('home.message.detail',['msg'=>$msg]);
     }
 
     /**
@@ -167,5 +167,14 @@ class MessageController extends Controller
         }
         $response = array('code' => 2001, 'msg' => '');
         return json_encode($response);
+    }
+
+    public function reply(Request $request)
+    {
+        $msgid = $request->input('msgid','');
+        $replycontent = $request->input('replycontent','');
+
+        //更新message记录，发送队列
+        $updateDate = array();
     }
 }

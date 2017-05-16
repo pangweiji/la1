@@ -79,6 +79,7 @@ Route::group(['as' => 'Home', 'middleware' => ['auth', 'permission:ADMIN_PANEL']
     Route::get(config('laraadmin.homeRoute') . '/message_accountList', 'Home\MessageController@accountList');
     Route::post(config('laraadmin.homeRoute') . '/message_addAccount_ajax', 'Home\MessageController@addAccountAjax');
     Route::get(config('laraadmin.homeRoute') . '/message_deleteAccount_ajax/{id}', 'Home\MessageController@deleteAccountAjax');
+    Route::post(config('laraadmin.homeRoute') . '/message_reply', 'Home\MessageController@reply');
 
     Route::resource(config('laraadmin.homeRoute') . '/user', 'Home\UsersController');
     Route::get(config('laraadmin.homeRoute') . '/userinfo', 'Home\UsersController@getUsers');
