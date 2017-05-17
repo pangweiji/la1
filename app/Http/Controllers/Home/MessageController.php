@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
+use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 class MessageController extends Controller
 {
@@ -174,7 +176,67 @@ class MessageController extends Controller
         $msgid = $request->input('msgid','');
         $replycontent = $request->input('replycontent','');
 
+        //保存为html
+        $html = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+        $html .= $replycontent;
+        $html .= '<includetail><!--<![endif]--></includetail></div>';
+        $reply_html_path = '/reply_html/'.$msgid.'-'.date('Y-m-d').'.html';
+        file_put_contents(storage_path() . $reply_html_path, $html);
+
+        //获取邮件信息
+        $msgInfo = DB::table('message')
+            ->where('id', $msgid)
+            ->first();
+
         //更新message记录，发送队列
         $updateDate = array();
+        $status = 1;
+        $result1 = DB::table('message')
+            ->where('id', $msgid)
+            ->update(
+                [
+                    'status' => 1,
+                    'replycontent' => $replycontent,
+                    'replyuser_id' => 1,
+                    'replytime' => time(),
+                    'replyhtml' => $reply_html_path
+                ]
+            );
+
+        if ($result1) {
+            $conn = new AMQPConnection(env('RABBITMQ_HOST'), env('RABBITMQ_PORT'), env('RABBITMQ_LOGIN'), env('RABBITMQ_PASSWORD'), env('RABBITMQ_MESSAGE_VHOST'));
+            $channel = $conn->channel();
+            //交换机
+            $channel -> exchange_declare('message_exchenge', 'fanout', false, true, false);
+            //声明queue
+            $channel -> queue_declare('message_queue', false, true, false, false);
+            $channel->queue_bind('message_queue', 'message_exchenge');
+
+            $data = json_encode(array(
+                'mid'       => $msgid,
+                'msgbody'   => $replycontent,
+                'subject'   => $msgInfo->subject,
+                'sendid'    => $msgInfo->sendid,
+                'receiveid' => $msgInfo->receiveid,
+                'msg_uid'   => $msgInfo->message_id,
+                'replyhtml' => $reply_html_path
+            ));
+
+            //消息持久化
+            $msg = new AMQPMessage($data, array('delivery_mode' => 2));
+            $channel->basic_publish($msg, 'message_exchenge');
+
+            $logPath = storage_path() . '/logs/message/reply_queue.log';
+            $log = date('Y-m-d', time()).'  发布消息：'.$msgid.' to '. $msgInfo->receiveid . "\r\n";
+            file_put_contents($logPath, $log, FILE_APPEND);
+
+            $channel -> close();
+            $conn -> close();
+            $response = array('code' => 3001, 'msg' => '发送成功！');
+            return json_encode($response);
+        } else {
+            $response = array('code' => 3002, 'msg' => '发送失败！');
+            return json_encode($response); 
+        }
     }
 }

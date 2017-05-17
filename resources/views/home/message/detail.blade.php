@@ -23,7 +23,14 @@
 					上传附件：
 				</div>
 				<input type="hidden" name="msgid" value="{{ $m->id }}" />
-				<button id="reply" type="button" class="btn btn-primary">回复</button>
+				@if($m->status == 2)
+					<button id="reply" type="button" class="btn btn-primary">已回复</button>
+				@elseif($m->status == 1)
+					<button id="reply" type="button" class="btn btn-primary">正在回复</button>
+				@elseif($m->status == 4)
+					<button id="reply" type="button" class="btn btn-primary">回复失败</button>
+				@endif
+				
 			</form>
 		</div>	
 	</div>
@@ -59,7 +66,7 @@ $(function () {
 
 		var url = '/home/message_reply';
 		var msgid = $('form input[name=msgid]').val();
-
+		$('#reply').html('正在回复');
 		$.ajax({
 			url: url,
 			type: 'POST',
@@ -70,7 +77,14 @@ $(function () {
 			}
 		})
 		.success(function (data) {
-			console.log(data);
+			if (data.code != 3001) {
+				toastr.error(data.msg);
+				return false;
+			} else {
+				$('#reply').html('已回复');
+				toastr.success(data.msg);
+				return false;
+			}
 		})
 
 	});

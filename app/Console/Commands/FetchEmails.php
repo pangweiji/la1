@@ -100,21 +100,34 @@ class FetchEmails extends Command
 
         $mailInfo = array();
         $i = 1;
+
+        $html_path = '/message_email_html/'.$account.'/'.date('Y-m-d',time()).'/';
+        if (!file_exists(storage_path().$html_path)) {
+            mkdir(storage_path().$html_path, 0777, true);
+        }
+
         $insertData = array();
         foreach ($mailsIds as $mailsId) {
             $mailObj = $mailbox->getMail($mailsId);
+
+            //保存html页面
+            $save_html_path = $mailsId.'.html';
+            file_put_contents(storage_path().$html_path.$save_html_path, $mailObj->textHtml);
+
             $insertData[$mailsId] = [
                 'message_id' => $mailsId, 
                 'receiveid' => $mailObj->fromAddress, 
                 'receivename' => $mailObj->fromName, 
-                'sendid' => $mailObj->to, 
+                'sendid' => $email,
                 'sendname' => $mailObj->toString, 
                 'subject' => $mailObj->subject, 
                 'status' => 0,
                 'sendtime' => strtotime($mailObj->date) + 8*3600*24,
                 'account' => $account, 
                 'receivetimestamp' => time(), 
-                'plaincontent' => $mailObj->textPlain
+                'plaincontent' => $mailObj->textPlain,
+                'messagepath' => storage_path().$html_path.$save_html_path,
+                'hasAttachment' => 0
             ];
 
             $this->line('fetch '.$i.'/'.$allEmail.' '.$mailObj->fromAddress);
@@ -135,15 +148,14 @@ class FetchEmails extends Command
                         'attachmentName' => $ha->name,
                         'attachmentPath' => $uploadPath . basename($ha->filePath)
                     ];
-
-                    //插入
-                    $result1 = DB::table('msg_fetchattachment')
-                        ->insert($atArr);
-                    if (!$result1) {
-                        $this->error('save attachment fail!');
-                    } else {
-                        $this->info('save attachment success!');
-                    }
+                }
+                //插入
+                $result1 = DB::table('msg_fetchattachment')
+                    ->insert($atArr);
+                if (!$result1) {
+                    $this->error('save attachment fail!');
+                } else {
+                    $this->info('save attachment success!');
                 }
             }
         }
@@ -153,7 +165,7 @@ class FetchEmails extends Command
             $this->error($error);
             exit;
         }
-        dd($insertData);
+
         //入库
         $result2 = DB::table('message')
             ->insert($insertData);

@@ -17,7 +17,8 @@
         "symfony/dom-crawler": "2.8.*|3.0.*",
         "google/apiclient": "^2.0",
 		"phpmailer/phpmailer": "~5.2",
-        "php-imap/php-imap": "~2.0"
+        "php-imap/php-imap": "~2.0",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "5.*"
     },
     "autoload": {
         "classmap": [
