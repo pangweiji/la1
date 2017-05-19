@@ -3,7 +3,7 @@
 return [
 
     'providers' => append_config([
-            VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class,
+        VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class,
     ]),
 
 ];

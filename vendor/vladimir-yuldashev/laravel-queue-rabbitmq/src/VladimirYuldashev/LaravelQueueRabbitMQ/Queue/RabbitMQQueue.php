@@ -5,9 +5,9 @@ namespace VladimirYuldashev\LaravelQueueRabbitMQ\Queue;
 use DateTime;
 use ErrorException;
 use Exception;
-use Log;
 use Illuminate\Contracts\Queue\Queue as QueueContract;
 use Illuminate\Queue\Queue;
+use Log;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -26,19 +26,19 @@ class RabbitMQQueue extends Queue implements QueueContract
 
     protected $declareExchange;
     protected $declaredExchanges = [];
-
     protected $declareBindQueue;
+    protected $sleepOnError;
+
     protected $declaredQueues = [];
 
     protected $defaultQueue;
     protected $configQueue;
     protected $configExchange;
-    protected $sleepOnError;
 
     /**
      * @var int
      */
-    private $attempts;
+    private $retryAfter;
 
     /**
      * @var string
@@ -47,7 +47,7 @@ class RabbitMQQueue extends Queue implements QueueContract
 
     /**
      * @param AMQPStreamConnection $amqpConnection
-     * @param array $config
+     * @param array                $config
      */
     public function __construct(AMQPStreamConnection $amqpConnection, $config)
     {
@@ -63,11 +63,23 @@ class RabbitMQQueue extends Queue implements QueueContract
     }
 
     /**
+     * Get the size of the queue.
+     *
+     * @param string $queue
+     *
+     * @return int
+     */
+    public function size($queue = null)
+    {
+        // TODO: Implement size() method.
+    }
+
+    /**
      * Push a new job onto the queue.
      *
-     * @param  string $job
-     * @param  mixed $data
-     * @param  string $queue
+     * @param string $job
+     * @param mixed  $data
+     * @param string $queue
      *
      * @return bool
      */
@@ -79,17 +91,16 @@ class RabbitMQQueue extends Queue implements QueueContract
     /**
      * Push a raw payload onto the queue.
      *
-     * @param  string $payload
-     * @param  string $queue
-     * @param  array $options
+     * @param string $payload
+     * @param string $queue
+     * @param array  $options
      *
      * @return mixed
      */
     public function pushRaw($payload, $queue = null, array $options = [])
     {
-        $queue = $this->getQueueName($queue);
         try {
-            $this->declareQueue($queue);
+            $queue = $this->getQueueName($queue);
             if (isset($options['delay']) && $options['delay'] > 0) {
                 list($queue, $exchange) = $this->declareDelayedQueue($queue, $options['delay']);
             } else {
@@ -97,12 +108,12 @@ class RabbitMQQueue extends Queue implements QueueContract
             }
 
             $headers = [
-                'Content-Type' => 'application/json',
+                'Content-Type'  => 'application/json',
                 'delivery_mode' => 2,
             ];
 
-            if (isset($this->attempts) === true) {
-                $headers['application_headers'] = [self::ATTEMPT_COUNT_HEADERS_KEY => ['I', $this->attempts]];
+            if ($this->retryAfter !== null) {
+                $headers['application_headers'] = [self::ATTEMPT_COUNT_HEADERS_KEY => ['I', $this->retryAfter]];
             }
 
             // push job to a queue
@@ -118,23 +129,21 @@ class RabbitMQQueue extends Queue implements QueueContract
         } catch (ErrorException $exception) {
             $this->reportConnectionError('pushRaw', $exception);
         }
-
-        return null;
     }
 
     /**
      * Push a new job onto the queue after a delay.
      *
-     * @param  \DateTime|int $delay
-     * @param  string $job
-     * @param  mixed $data
-     * @param  string $queue
+     * @param \DateTime|int $delay
+     * @param string        $job
+     * @param mixed         $data
+     * @param string        $queue
      *
      * @return mixed
      */
     public function later($delay, $job, $data = '', $queue = null)
     {
-        return $this->pushRaw($this->createPayload($job, $data), $queue, ['delay' => $delay]);
+        return $this->pushRaw($this->createPayload($job, $data), $queue, ['delay' => $this->secondsUntil($delay)]);
     }
 
     /**
@@ -156,13 +165,18 @@ class RabbitMQQueue extends Queue implements QueueContract
             $message = $this->channel->basic_get($queue);
 
             if ($message instanceof AMQPMessage) {
-                return new RabbitMQJob($this->container, $this, $this->channel, $queue, $message);
+                return new RabbitMQJob(
+                    $this->container,
+                    $this,
+                    $this->channel,
+                    $queue,
+                    $message,
+                    $this->connectionName
+                );
             }
         } catch (ErrorException $exception) {
             $this->reportConnectionError('pop', $exception);
         }
-
-        return null;
     }
 
     /**
@@ -185,6 +199,7 @@ class RabbitMQQueue extends Queue implements QueueContract
 
     /**
      * @param $name
+     *
      * @return array
      */
     private function declareQueue($name)
@@ -192,8 +207,7 @@ class RabbitMQQueue extends Queue implements QueueContract
         $name = $this->getQueueName($name);
         $exchange = $this->configExchange['name'] ?: $name;
 
-        if ($this->declareExchange && !in_array($exchange, $this->declaredExchanges)) {
-            $this->declaredExchanges[] = $exchange;
+        if ($this->declareExchange && !in_array($exchange, $this->declaredExchanges, true)) {
             // declare exchange
             $this->channel->exchange_declare(
                 $exchange,
@@ -202,10 +216,11 @@ class RabbitMQQueue extends Queue implements QueueContract
                 $this->configExchange['durable'],
                 $this->configExchange['auto_delete']
             );
+
+            $this->declaredExchanges[] = $exchange;
         }
 
-        if ($this->declareBindQueue && !in_array($name, $this->declaredQueues)) {
-            $this->declaredQueues[] = $name;
+        if ($this->declareBindQueue && !in_array($name, $this->declaredQueues, true)) {
             // declare queue
             $this->channel->queue_declare(
                 $name,
@@ -217,48 +232,54 @@ class RabbitMQQueue extends Queue implements QueueContract
 
             // bind queue to the exchange
             $this->channel->queue_bind($name, $exchange, $name);
+
+            $this->declaredQueues[] = $name;
         }
 
         return [$name, $exchange];
     }
 
     /**
-     * @param string $destination
+     * @param string       $destination
      * @param DateTime|int $delay
      *
-     * @return string
+     * @return array
      */
     private function declareDelayedQueue($destination, $delay)
     {
-        $delay = $this->getSeconds($delay);
+        $delay = $this->secondsUntil($delay);
         $destination = $this->getQueueName($destination);
         $destinationExchange = $this->configExchange['name'] ?: $destination;
-        $name = $this->getQueueName($destination) . '_deferred_' . $delay;
+        $name = $this->getQueueName($destination).'_deferred_'.$delay;
         $exchange = $this->configExchange['name'] ?: $destination;
 
         // declare exchange
-        $this->channel->exchange_declare(
-            $exchange,
-            $this->configExchange['type'],
-            $this->configExchange['passive'],
-            $this->configExchange['durable'],
-            $this->configExchange['auto_delete']
-        );
+        if (!in_array($exchange, $this->declaredExchanges, true)) {
+            $this->channel->exchange_declare(
+                $exchange,
+                $this->configExchange['type'],
+                $this->configExchange['passive'],
+                $this->configExchange['durable'],
+                $this->configExchange['auto_delete']
+            );
+        }
 
         // declare queue
-        $this->channel->queue_declare(
-            $name,
-            $this->configQueue['passive'],
-            $this->configQueue['durable'],
-            $this->configQueue['exclusive'],
-            $this->configQueue['auto_delete'],
-            false,
-            new AMQPTable([
-                'x-dead-letter-exchange' => $destinationExchange,
-                'x-dead-letter-routing-key' => $destination,
-                'x-message-ttl' => $delay * 1000,
-            ])
-        );
+        if (!in_array($name, $this->declaredQueues, true)) {
+            $this->channel->queue_declare(
+                $name,
+                $this->configQueue['passive'],
+                $this->configQueue['durable'],
+                $this->configQueue['exclusive'],
+                $this->configQueue['auto_delete'],
+                false,
+                new AMQPTable([
+                    'x-dead-letter-exchange'    => $destinationExchange,
+                    'x-dead-letter-routing-key' => $destination,
+                    'x-message-ttl'             => $delay * 1000,
+                ])
+            );
+        }
 
         // bind queue to the exchange
         $this->channel->queue_bind($name, $exchange, $name);
@@ -275,7 +296,7 @@ class RabbitMQQueue extends Queue implements QueueContract
      */
     public function setAttempts($count)
     {
-        $this->attempts = $count;
+        $this->retryAfter = $count;
     }
 
     /**
@@ -297,7 +318,7 @@ class RabbitMQQueue extends Queue implements QueueContract
      */
     public function getCorrelationId()
     {
-        return $this->correlationId ?: uniqid();
+        return $this->correlationId ?: uniqid('', true);
     }
 
     /**
@@ -306,9 +327,8 @@ class RabbitMQQueue extends Queue implements QueueContract
      */
     private function reportConnectionError($action, Exception $e)
     {
-        Log::error('AMQP error while attempting ' . $action . ': ' . $e->getMessage());
+        Log::error('AMQP error while attempting '.$action.': '.$e->getMessage());
         // Sleep so that we don't flood the log file
         sleep($this->sleepOnError);
     }
-
 }

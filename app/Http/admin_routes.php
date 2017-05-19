@@ -73,6 +73,7 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 });
 
 Route::group(['as' => 'Home', 'middleware' => ['auth', 'permission:ADMIN_PANEL']], function () {
+    /* ================== Message ================== */
     Route::resource(config('laraadmin.homeRoute') . 'message', 'Home\MessageController');
     Route::get(config('laraadmin.homeRoute') . '/message_list', 'Home\MessageController@list');
     Route::get(config('laraadmin.homeRoute') . '/message_detail/{id}', 'Home\MessageController@detail');
@@ -80,6 +81,14 @@ Route::group(['as' => 'Home', 'middleware' => ['auth', 'permission:ADMIN_PANEL']
     Route::post(config('laraadmin.homeRoute') . '/message_addAccount_ajax', 'Home\MessageController@addAccountAjax');
     Route::get(config('laraadmin.homeRoute') . '/message_deleteAccount_ajax/{id}', 'Home\MessageController@deleteAccountAjax');
     Route::post(config('laraadmin.homeRoute') . '/message_reply', 'Home\MessageController@reply');
+
+    /* ================== Gmail manager ================== */
+    Route::any(config('laraadmin.homeRoute') . '/gmail_list', 'Home\GmailManagerController@list');
+    Route::any(config('laraadmin.homeRoute') . '/gmail_auth', 'Home\GmailManagerController@auth');
+    Route::any(config('laraadmin.homeRoute') . '/gmail_getCode', 'Home\GmailManagerController@getCode');
+
+    /* ================== Test ================== */
+    Route::any(config('laraadmin.homeRoute') . '/test', 'Home\TestController@test');
 
     Route::resource(config('laraadmin.homeRoute') . '/user', 'Home\UsersController');
     Route::get(config('laraadmin.homeRoute') . '/userinfo', 'Home\UsersController@getUsers');

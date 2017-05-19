@@ -50,7 +50,7 @@
 										<li><a href="{{ url('home/sendmessage') }}">发送邮件</a></li>
 										<li><a href="{{ url('home/message_accountList') }}">帐户管理</a></li>
 										<li class="divider"></li>
-										<li><a href="#">分离的链接</a></li>
+										<li><a href="{{ url('home/gmail_list') }}">Gmail管理</a></li>
 										<li class="divider"></li>	
 										<li><a href="#">另一个分离的链接</a></li>
 									</ul>

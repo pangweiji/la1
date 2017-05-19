@@ -125,6 +125,11 @@ class MessageController extends Controller
      */
     public function addAccountAjax(Request $request)
     {
+        return response()->json([
+            'code' => 1002,
+            'msg' => '帐号已存在！'
+        ]);
+        die;
         $account = $request->input('account','');
         $email = $request->input('email','');
         $password = $request->input('password','');
@@ -136,8 +141,10 @@ class MessageController extends Controller
             ->get();
 
         if (!empty($checkResult)) {
-            $response = array('code' => 1002, 'msg' => '帐号已存在！');
-            return json_encode($response);
+            return response()->json([
+                'code' => '1002',
+                'msg' => '帐号已存在！'
+            ]);
         }
 
         //插入
@@ -146,8 +153,10 @@ class MessageController extends Controller
                 ['account' => $account, 'email' => $email, 'password' => $password]
             );
         if (!$result) {
-            $response = array('code' => 1003, 'msg' => '帐号添加失败！');
-            return json_encode($response);
+            return resopnse()->json([
+                'code' => 1003,
+                'msg' => '帐号添加失败！'
+            ]);
         }
     }
 
@@ -155,8 +164,10 @@ class MessageController extends Controller
     {
         $id = isset($id) ? $id : '';
         if (!$id) {
-            $response = array('code' => 2002, 'msg' => '参数错误！');
-            return json_encode($response); 
+            return resopnse()->json([
+                'code' => 2002,
+                'msg' => '参数错误！'
+            ]);
         }
         $result = DB::table('email_info')
             ->where('id', $id)
@@ -164,13 +175,20 @@ class MessageController extends Controller
                 ['is_delete' => 1]
             );
         if (!$result) {
-            $response = array('code' => 2003, 'msg' => '删除失败！');
-            return json_encode($response); 
+            return resopnse()->json([
+                'code' => 2003,
+                'msg' => '删除失败！'
+            ]);
         }
-        $response = array('code' => 2001, 'msg' => '');
-        return json_encode($response);
+        return resopnse()->json([
+                'code' => 2001,
+                'msg' => '添加成功！'
+        ]);
     }
 
+    /**
+     *  回复
+     */
     public function reply(Request $request)
     {
         $msgid = $request->input('msgid','');
@@ -232,11 +250,15 @@ class MessageController extends Controller
 
             $channel -> close();
             $conn -> close();
-            $response = array('code' => 3001, 'msg' => '发送成功！');
-            return json_encode($response);
+            return resopnse()->json([
+                'code' => 3001,
+                'msg' => '发送成功！'
+            ]);
         } else {
-            $response = array('code' => 3002, 'msg' => '发送失败！');
-            return json_encode($response); 
+            return resopnse()->json([
+                'code' => 3002,
+                'msg' => '发送失败！'
+            ]);
         }
     }
 }

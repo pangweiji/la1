@@ -288,7 +288,7 @@ class HtmlBuilder
     {
         return str_repeat('&nbsp;', $num);
     }
-    
+
     /**
      * Generate an ordered list of items.
      *
@@ -446,11 +446,6 @@ class HtmlBuilder
         // form like required="required" instead of using incorrect numerics.
         if (is_numeric($key)) {
             $key = $value;
-        }
-        
-        // Treat boolean attributes as HTML properties
-        if (is_bool($value)) {
-            return $value ? $key : '';
         }
 
         if (! is_null($value)) {

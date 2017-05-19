@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel
         // Commands\Inspire::class,
         'App\Console\Commands\FetchEmails',
         'App\Console\Commands\SendEmails',
+        'App\Console\Commands\Fetch_gmail',
+        'App\Console\Commands\Fetch_amazon_feedback',
     ];
 
     /**
