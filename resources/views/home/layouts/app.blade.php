@@ -47,7 +47,6 @@
 									</a>
 									<ul class="dropdown-menu">
 										<li><a href="{{ url('home/message_list') }}">收件箱</a></li>
-										<li><a href="{{ url('home/sendmessage') }}">发送邮件</a></li>
 										<li><a href="{{ url('home/message_accountList') }}">帐户管理</a></li>
 										<li class="divider"></li>
 										<li><a href="{{ url('home/gmail_list') }}">Gmail管理</a></li>

@@ -74,7 +74,7 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 
 Route::group(['as' => 'Home', 'middleware' => ['auth', 'permission:ADMIN_PANEL']], function () {
     /* ================== Message ================== */
-    Route::resource(config('laraadmin.homeRoute') . 'message', 'Home\MessageController');
+    Route::resource(config('laraadmin.homeRoute') . '/message', 'Home\MessageController');
     Route::get(config('laraadmin.homeRoute') . '/message_list', 'Home\MessageController@list');
     Route::get(config('laraadmin.homeRoute') . '/message_detail/{id}', 'Home\MessageController@detail');
     Route::get(config('laraadmin.homeRoute') . '/message_accountList', 'Home\MessageController@accountList');
@@ -89,6 +89,10 @@ Route::group(['as' => 'Home', 'middleware' => ['auth', 'permission:ADMIN_PANEL']
 
     /* ================== Test ================== */
     Route::any(config('laraadmin.homeRoute') . '/test', 'Home\TestController@test');
+    Route::any(config('laraadmin.homeRoute') . '/test_show', 'Home\TestController@show');
+
+    /* ================== Test1 ================== */
+    Route::resource(config('laraadmin.homeRoute') . '/test1', 'Home\Test1Controller');
 
     Route::resource(config('laraadmin.homeRoute') . '/user', 'Home\UsersController');
     Route::get(config('laraadmin.homeRoute') . '/userinfo', 'Home\UsersController@getUsers');

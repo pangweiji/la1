@@ -14,7 +14,15 @@ class TestController extends Controller
     public function test()
     {
         $messages = Message::find(1)->message_id;
-        dd($messages);
+
         return view('home.test.index');
+    }
+
+    public function show()
+    {
+        dd('aaa');
+        $filePath = 'C:\Users\sw9999\Desktop\test\1111.jpg';
+        $headers = array();
+        return response()->file($filePath, $headers);
     }
 }

@@ -117,6 +117,7 @@ class MessageController extends Controller
         $list = DB::table('email_info')
             ->where('is_delete', 0)
             ->paginate(10);
+
         return view('home.message.accountList', ['list' => $list]);
     }
 

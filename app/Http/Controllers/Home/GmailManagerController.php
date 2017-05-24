@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Home;
-require_once app_path('Libraries/').'GmailAPI.class.php';
+require_once app_path('Libraries/GoogleAPIs/').'GmailAPI.class.php';
 
 use Illuminate\Http\Request;
 

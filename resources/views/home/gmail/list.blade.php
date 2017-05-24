@@ -117,16 +117,14 @@
 			data: {platform: platform, account: account, email: email, submit: 'submit'},
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		})
-		.success(function (data) {
-			console.log(data);
-		})
-		.fail(function() {
-			console.log("error");
-		})
+			},
+			success(function (data) {
 
-		
+			}),
+			error(function () {
+
+			})
+		})	
 	});
 </script>
 @endsection

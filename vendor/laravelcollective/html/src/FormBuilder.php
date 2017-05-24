@@ -739,6 +739,8 @@ class FormBuilder
     {
         if (is_array($selected)) {
             return in_array($value, $selected) ? 'selected' : null;
+        } elseif ($selected instanceof Collection) {
+            return $selected->contains($value) ? 'selected' : null;
         }
 
         return ((string) $value == (string) $selected) ? 'selected' : null;
@@ -1124,6 +1126,7 @@ class FormBuilder
 
             if ($hasNullMiddleware
                 && is_null($old)
+                && is_null($value)
                 && !is_null($this->view->shared('errors'))
                 && count($this->view->shared('errors')) > 0
             ) {
